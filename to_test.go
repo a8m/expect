@@ -23,8 +23,14 @@ func TestContains(t *testing.T) {
 	expect("foobar").Not.To.Contains("ga")
 }
 
+func TestMatch(t *testing.T) {
+	expect := New(t)
+	expect("Foo").To.Match("(?i)foo")
+}
+
 func TestToChaining(t *testing.T) {
 	expect := New(t)
 	expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")
 	expect("foo").Not.To.StartWith("bar").And.EndWith("baz").And.Contains("bob")
+	expect("foo").To.Match("f").And.Match("(?i)F")
 }

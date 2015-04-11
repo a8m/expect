@@ -2,6 +2,7 @@ package expect
 
 import (
 	. "fmt"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -36,6 +37,19 @@ func (t *To) EndWith(s string) *To {
 func (t *To) Contains(s string) *To {
 	msg := t.msg(Sprintf("contains %v", s))
 	if strings.Contains(t.Str(), s) != t.assert {
+		t.Error(msg)
+	}
+	return t
+}
+
+// Assert  whether a textual regular expression matches a string
+func (t *To) Match(s string) *To {
+	msg := t.msg(Sprintf("matches %v", s))
+	matched, err := regexp.MatchString(s, t.Str())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if matched != t.assert {
 		t.Error(msg)
 	}
 	return t
