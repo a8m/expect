@@ -21,6 +21,14 @@ func (t *To) StartWith(s string) {
 	}
 }
 
+// Assert that a string ends with `s`
+func (t *To) EndWith(s string) {
+	msg := t.msg(Sprintf("end with %v", s))
+	if strings.HasSuffix(t.Str(), s) != t.assert {
+		t.Error(msg)
+	}
+}
+
 func (t *To) Str() (s string) {
 	if s, ok := t.actual.(string); ok {
 		return s

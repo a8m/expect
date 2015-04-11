@@ -10,3 +10,9 @@ func TestStartWith(t *testing.T) {
 	expect("foo").To.StartWith("f")
 	expect("foo").Not.To.StartWith("bar")
 }
+
+func TestEndWith(t *testing.T) {
+	expect := New(t)
+	expect("bar").To.EndWith("ar")
+	expect("bar").Not.To.EndWith("az")
+}
