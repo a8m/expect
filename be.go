@@ -2,6 +2,7 @@ package expect
 
 import (
 	. "fmt"
+	"reflect"
 	"testing"
 )
 
@@ -11,16 +12,16 @@ type Be struct {
 	assert bool
 }
 
-func (b *Be) Above(e int) {
+func (b *Be) Above(e float64) {
 	msg := b.msg(Sprintf("above %v", e))
-	if b.Int() > e != b.assert {
+	if b.Num() > e != b.assert {
 		b.Error(msg)
 	}
 }
 
-func (b *Be) Below(e int) {
+func (b *Be) Below(e float64) {
 	msg := b.msg(Sprintf("below %v", e))
-	if b.Int() < e != b.assert {
+	if b.Num() < e != b.assert {
 		b.Error(msg)
 	}
 }
@@ -33,10 +34,17 @@ func (b *Be) msg(s string) string {
 	return Sprintf("Expect %v %vto be %v", b.actual, not, s)
 }
 
-func (b *Be) Int() int {
-	if i, ok := b.actual.(int); ok {
-		return i
+func (b *Be) Num() float64 {
+	rv := reflect.ValueOf(b.actual)
+	switch rv.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return float64(rv.Int())
+	case reflect.Uint, reflect.Uintptr, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return float64(rv.Uint())
+	case reflect.Float32, reflect.Float64:
+		return float64(rv.Float())
+	default:
+		b.Fatal("Invalid argument - expecting numeric value.")
+		return 0
 	}
-	b.Fatal("Invalid argument, expect to int")
-	return 0
 }
