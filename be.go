@@ -12,6 +12,7 @@ type Be struct {
 	assert bool
 }
 
+// Assert numeric value above the given value (> n)
 func (b *Be) Above(e float64) {
 	msg := b.msg(Sprintf("above %v", e))
 	if b.Num() > e != b.assert {
@@ -19,6 +20,7 @@ func (b *Be) Above(e float64) {
 	}
 }
 
+// Assert numeric value below the given value (< n)
 func (b *Be) Below(e float64) {
 	msg := b.msg(Sprintf("below %v", e))
 	if b.Num() < e != b.assert {

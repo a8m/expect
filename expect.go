@@ -5,23 +5,19 @@ import (
 )
 
 type Expect struct {
-	To  *to
+	To  *To
 	Not *not
 }
 
-type to struct {
-	Be *Be
-}
-
 type not struct {
-	To *to
+	To *To
 }
 
 func New(t *testing.T) func(v interface{}) *Expect {
 	return func(v interface{}) *Expect {
 		return &Expect{
-			To:  &to{&Be{t, v, true}},
-			Not: &not{&to{&Be{t, v, false}}},
+			To:  &To{t, &Be{t, v, true}, v, true},
+			Not: &not{&To{t, &Be{t, v, false}, v, false}},
 		}
 	}
 }
