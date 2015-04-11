@@ -15,9 +15,17 @@ type not struct {
 
 func New(t *testing.T) func(v interface{}) *Expect {
 	return func(v interface{}) *Expect {
+		// Be, Not.Be
+		var be, nbe Be
+		be = Be{t, &be, v, true}
+		nbe = Be{t, &nbe, v, false}
+		// To, Not.To
+		var to, nto To
+		to = To{t, &be, &to, v, true}
+		nto = To{t, &nbe, &nto, v, false}
 		return &Expect{
-			To:  &To{t, &Be{t, v, true}, v, true},
-			Not: &not{&To{t, &Be{t, v, false}, v, false}},
+			To:  &to,
+			Not: &not{&nto},
 		}
 	}
 }

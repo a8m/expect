@@ -16,3 +16,9 @@ func TestBelow(t *testing.T) {
 	expect(10).To.Be.Below(20)
 	expect(10).Not.To.Be.Below(0)
 }
+
+func TestBeChaining(t *testing.T) {
+	expect := New(t)
+	expect(10).To.Be.Above(0).And.Below(20)
+	expect(10).Not.To.Be.Above(20).And.Below(0)
+}

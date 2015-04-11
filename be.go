@@ -8,24 +8,27 @@ import (
 
 type Be struct {
 	*testing.T
+	And    *Be
 	actual interface{}
 	assert bool
 }
 
 // Assert numeric value above the given value (> n)
-func (b *Be) Above(e float64) {
+func (b *Be) Above(e float64) *Be {
 	msg := b.msg(Sprintf("above %v", e))
 	if b.Num() > e != b.assert {
 		b.Error(msg)
 	}
+	return b
 }
 
 // Assert numeric value below the given value (< n)
-func (b *Be) Below(e float64) {
+func (b *Be) Below(e float64) *Be {
 	msg := b.msg(Sprintf("below %v", e))
 	if b.Num() < e != b.assert {
 		b.Error(msg)
 	}
+	return b
 }
 
 func (b *Be) msg(s string) string {
