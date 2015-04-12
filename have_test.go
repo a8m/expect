@@ -43,3 +43,22 @@ func TestKey(t *testing.T) {
 	expect(m3).To.Have.Key("map", map[int]int{1: 1})
 	expect(m3).Not.To.Have.Key("map", map[string]int{})
 }
+
+func TestKeys(t *testing.T) {
+	expect := New(t)
+	m1 := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+	expect(m1).To.Have.Keys("a", "b", "c")
+	expect(m1).Not.To.Have.Keys("d", "e", "i")
+
+	m2 := map[int]string{
+		1: "a",
+		2: "b",
+		3: "c",
+	}
+	expect(m2).To.Have.Keys(1, 2, 3)
+	expect(m2).Not.To.Have.Keys(4, 5, 6)
+}

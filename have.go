@@ -26,6 +26,7 @@ func (h *Have) Len(i int) *Have {
 	return h
 }
 
+// Assert `key` exists on the given Map, and has optional value.
 func (h *Have) Key(args ...interface{}) *Have {
 	// Test also value
 	testVal := len(args) > 1
@@ -45,6 +46,24 @@ func (h *Have) Key(args ...interface{}) *Have {
 			}
 		} else {
 			h.Error(msg)
+		}
+	default:
+		h.Fatal(invMsg("Map"))
+	}
+	return h
+}
+
+// Assert `keys` exists on the given Map
+func (h *Have) Keys(args ...interface{}) *Have {
+	msg := h.msg(Sprintf("keys: %v", args))
+	switch reflect.TypeOf(h.actual).Kind() {
+	case reflect.Map:
+		v := reflect.ValueOf(h.actual)
+		for _, k := range args {
+			vk := v.MapIndex(reflect.ValueOf(k))
+			if vk.IsValid() != h.assert {
+				h.Error(msg)
+			}
 		}
 	default:
 		h.Fatal(invMsg("Map"))
