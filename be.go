@@ -141,6 +141,15 @@ func (b *Be) Chan() *Be {
 	return b
 }
 
+// Assert given value is type of the given string
+func (b *Be) Type(s string) *Be {
+	msg := b.msg(Sprintf("type %v", s))
+	if reflect.TypeOf(b.actual).Name() == s != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }

@@ -92,6 +92,14 @@ func TestChan(t *testing.T) {
 	expect(1).Not.To.Be.Chan()
 }
 
+func TestType(t *testing.T) {
+	expect := New(t)
+	type Person struct{}
+	expect(Person{}).To.Be.Type("Person")
+	expect(1).To.Be.Type("int")
+	expect(struct{}{}).Not.To.Be.Type("Person")
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)
