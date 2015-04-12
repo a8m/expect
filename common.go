@@ -2,6 +2,7 @@ package expect
 
 import (
 	. "fmt"
+	"reflect"
 )
 
 func errMsg(t string) func(act, exp interface{}, assert bool) string {
@@ -12,5 +13,14 @@ func errMsg(t string) func(act, exp interface{}, assert bool) string {
 		}
 		s = Sprintf("Expect %v %v%v %v", act, not, t, exp)
 		return
+	}
+}
+
+func length(v interface{}) (int, bool) {
+	switch reflect.TypeOf(v).Kind() {
+	case reflect.Slice, reflect.Array, reflect.Map, reflect.String:
+		return reflect.ValueOf(v).Len(), true
+	default:
+		return 0, false
 	}
 }

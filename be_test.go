@@ -23,6 +23,7 @@ func TestEmpty(t *testing.T) {
 	expect([]int{1, 2, 3}).Not.To.Be.Empty()
 	expect(make(map[string]int)).To.Be.Empty()
 	expect([2]int{}).Not.To.Be.Empty()
+	expect([]byte{}).To.Be.Empty()
 }
 
 func TestBeChaining(t *testing.T) {
