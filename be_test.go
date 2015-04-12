@@ -77,6 +77,14 @@ func TestArray(t *testing.T) {
 	expect([...]int{1}).To.Be.Array()
 }
 
+func TestSlice(t *testing.T) {
+	expect := New(t)
+	expect([]int{}).To.Be.Slice()
+	expect([]string{"a"}).To.Be.Slice()
+	expect([1]int{}).Not.To.Be.Slice()
+	expect([...]int{1}).Not.To.Be.Slice()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)

@@ -123,6 +123,15 @@ func (b *Be) Array() *Be {
 	return b
 }
 
+// Assert given value is type of slice
+func (b *Be) Slice() *Be {
+	msg := b.msg("slice")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Slice != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }
