@@ -85,6 +85,13 @@ func TestSlice(t *testing.T) {
 	expect([...]int{1}).Not.To.Be.Slice()
 }
 
+func TestChan(t *testing.T) {
+	expect := New(t)
+	var ch chan string
+	expect(ch).To.Be.Chan()
+	expect(1).Not.To.Be.Chan()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)

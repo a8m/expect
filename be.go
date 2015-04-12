@@ -132,6 +132,15 @@ func (b *Be) Slice() *Be {
 	return b
 }
 
+// Assert given value is type of channel
+func (b *Be) Chan() *Be {
+	msg := b.msg("channel")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Chan != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }
