@@ -52,6 +52,12 @@ func TestInt(t *testing.T) {
 	expect("").Not.To.Be.Int()
 }
 
+func TestFloat(t *testing.T) {
+	expect := New(t)
+	expect(0).Not.To.Be.Float()
+	expect(1.1).To.Be.Float()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)

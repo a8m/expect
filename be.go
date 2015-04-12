@@ -82,6 +82,20 @@ func (b *Be) Int() *Be {
 	return b
 }
 
+// Assert given value is type of float32/64
+func (b *Be) Float() *Be {
+	msg := b.msg("float")
+	exp := false
+	switch b.actual.(type) {
+	case float32, float64:
+		exp = true
+	}
+	if exp != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }
