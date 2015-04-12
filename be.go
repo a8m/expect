@@ -44,6 +44,26 @@ func (b *Be) Empty() *Be {
 	return b
 }
 
+// Assert if the given value is truthy(i.e: not "", nil, 0, false)
+func (b *Be) Ok() *Be {
+	msg := b.msg("ok")
+	var exp bool
+	switch b.actual.(type) {
+	case int, int8, int32, int64, uint, uint8, uint32, uint64, float32, float64:
+		exp = b.actual != 0
+	case string:
+		exp = b.actual != ""
+	case bool:
+		exp = b.actual != false // TODO(Ariel): without the `!= false`, it's ask for type assertion
+	default:
+		exp = b.actual != nil
+	}
+	if exp != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }

@@ -26,6 +26,20 @@ func TestEmpty(t *testing.T) {
 	expect([]byte{}).To.Be.Empty()
 }
 
+func TestOk(t *testing.T) {
+	expect := New(t)
+	expect("").Not.To.Be.Ok()
+	expect(false).Not.To.Be.Ok()
+	expect(0).Not.To.Be.Ok()
+	expect(nil).Not.To.Be.Ok()
+
+	expect("foo").To.Be.Ok()
+	expect(1).To.Be.Ok()
+	expect(true).To.Be.Ok()
+	expect(struct{}{}).To.Be.Ok()
+	expect([]int{}).To.Be.Ok()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)
