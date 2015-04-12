@@ -31,12 +31,22 @@ func (b *Be) Below(e float64) *Be {
 	return b
 }
 
-func (b *Be) msg(s string) string {
-	not := "not "
-	if b.assert {
-		not = ""
+// Assert given value is empty, Array, Slice, Map or String
+func (b *Be) Empty() *Be {
+	msg := b.msg("empty")
+	switch reflect.TypeOf(b.actual).Kind() {
+	case reflect.Slice, reflect.Array, reflect.Map, reflect.String:
+		if (reflect.ValueOf(b.actual).Len() == 0) != b.assert {
+			b.Error(msg)
+		}
+	default:
+		b.Fatal("Ivalid argument - expecting Array, Slice, Map or String")
 	}
-	return Sprintf("Expect %v %vto be %v", b.actual, not, s)
+	return b
+}
+
+func (b *Be) msg(s string) string {
+	return errMsg("to be")(b.actual, s, b.assert)
 }
 
 func (b *Be) Num() float64 {

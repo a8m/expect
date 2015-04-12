@@ -64,9 +64,5 @@ func (t *To) Str() (s string) {
 }
 
 func (t *To) msg(s string) string {
-	not := "not "
-	if t.assert {
-		not = ""
-	}
-	return Sprintf("Expect %v %vto %v", t.actual, not, s)
+	return errMsg("to")(t.actual, s, t.assert)
 }
