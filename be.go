@@ -96,6 +96,24 @@ func (b *Be) Float() *Be {
 	return b
 }
 
+// Assert given value is type of boolean
+func (b *Be) Bool() *Be {
+	msg := b.msg("boolean")
+	if _, ok := b.actual.(bool); ok != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
+// Assert given value is type of map
+func (b *Be) Map() *Be {
+	msg := b.msg("map")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Map != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }

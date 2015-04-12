@@ -58,6 +58,18 @@ func TestFloat(t *testing.T) {
 	expect(1.1).To.Be.Float()
 }
 
+func TestBool(t *testing.T) {
+	expect := New(t)
+	expect(true).To.Be.Bool()
+	expect(1).Not.To.Be.Bool()
+}
+
+func TestMap(t *testing.T) {
+	expect := New(t)
+	expect(1).Not.To.Be.Map()
+	expect(map[string]int{}).To.Be.Map()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)
