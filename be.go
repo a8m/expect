@@ -114,6 +114,15 @@ func (b *Be) Map() *Be {
 	return b
 }
 
+// Assert given value is type of array
+func (b *Be) Array() *Be {
+	msg := b.msg("array")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Array != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }

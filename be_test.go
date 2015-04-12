@@ -70,6 +70,13 @@ func TestMap(t *testing.T) {
 	expect(map[string]int{}).To.Be.Map()
 }
 
+func TestArray(t *testing.T) {
+	expect := New(t)
+	expect([]int{}).Not.To.Be.Array()
+	expect([1]int{}).To.Be.Array()
+	expect([...]int{1}).To.Be.Array()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)
