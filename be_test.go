@@ -40,6 +40,12 @@ func TestOk(t *testing.T) {
 	expect([]int{}).To.Be.Ok()
 }
 
+func TestString(t *testing.T) {
+	expect := New(t)
+	expect("").To.Be.String()
+	expect(1).Not.To.Be.String()
+}
+
 func TestBeChaining(t *testing.T) {
 	expect := New(t)
 	expect(10).To.Be.Above(0).And.Below(20)

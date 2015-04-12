@@ -64,6 +64,15 @@ func (b *Be) Ok() *Be {
 	return b
 }
 
+// Assert given value is type of string
+func (b *Be) String() *Be {
+	msg := b.msg("string")
+	if _, ok := b.actual.(string); ok != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }
