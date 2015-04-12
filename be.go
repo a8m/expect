@@ -73,6 +73,15 @@ func (b *Be) String() *Be {
 	return b
 }
 
+// Assert given value is type of int
+func (b *Be) Int() *Be {
+	msg := b.msg("int")
+	if _, ok := b.actual.(int); ok != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 func (b *Be) msg(s string) string {
 	return errMsg("to be")(b.actual, s, b.assert)
 }
