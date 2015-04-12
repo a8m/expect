@@ -35,11 +35,11 @@ func (b *Be) Below(e float64) *Be {
 func (b *Be) Empty() *Be {
 	msg := b.msg("empty")
 	if i, ok := length(b.actual); ok {
-		if (i == 0) != b.assert {
+		if i == 0 != b.assert {
 			b.Error(msg)
 		}
 	} else {
-		b.Fatal("Ivalid argument - expecting Array, Slice, Map or String")
+		b.Fatal(invMsg("Array, Slice, Map or String"))
 	}
 	return b
 }
@@ -58,7 +58,7 @@ func (b *Be) Num() float64 {
 	case reflect.Float32, reflect.Float64:
 		return float64(rv.Float())
 	default:
-		b.Fatal("Invalid argument - expecting numeric value.")
+		b.Fatal(invMsg("numeric"))
 		return 0
 	}
 }

@@ -16,6 +16,11 @@ func errMsg(t string) func(act, exp interface{}, assert bool) string {
 	}
 }
 
+func invMsg(v string) (s string) {
+	s = Sprintf("Invalid argument - expecting %v value.", v)
+	return
+}
+
 func length(v interface{}) (int, bool) {
 	switch reflect.TypeOf(v).Kind() {
 	case reflect.Slice, reflect.Array, reflect.Map, reflect.String:

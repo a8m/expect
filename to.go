@@ -10,6 +10,7 @@ import (
 type To struct {
 	*testing.T
 	Be     *Be
+	Have   *Have
 	And    *To
 	actual interface{}
 	assert bool
@@ -59,7 +60,7 @@ func (t *To) Str() (s string) {
 	if s, ok := t.actual.(string); ok {
 		return s
 	}
-	t.Error("Ivalid argument - expecting string value")
+	t.Fatal(invMsg("string"))
 	return
 }
 
