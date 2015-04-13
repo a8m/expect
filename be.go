@@ -151,6 +151,15 @@ func (b *Be) Chan() *Be {
 	return b
 }
 
+// Assert given value is type of struct
+func (b *Be) Struct() *Be {
+	msg := b.msg("struct")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Struct != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 // Assert given value is type of pointer
 func (b *Be) Ptr() *Be {
 	msg := b.msg("pointer")

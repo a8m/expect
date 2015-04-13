@@ -105,6 +105,12 @@ func TestPtr(t *testing.T) {
 	expect(struct{}{}).Not.To.Be.Ptr()
 }
 
+func TestStruct(t *testing.T) {
+	expect := New(t)
+	expect(struct{}{}).To.Be.Struct()
+	expect(&struct{}{}).Not.To.Be.Struct()
+}
+
 func TestNil(t *testing.T) {
 	expect := New(t)
 	expect(nil).To.Be.Nil()
