@@ -141,6 +141,15 @@ func (b *Be) Chan() *Be {
 	return b
 }
 
+// Assert given value is type of pointer
+func (b *Be) Ptr() *Be {
+	msg := b.msg("pointer")
+	if reflect.TypeOf(b.actual).Kind() == reflect.Ptr != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 // Assert given value is type of the given string
 func (b *Be) Type(s string) *Be {
 	msg := b.msg(Sprintf("type %v", s))

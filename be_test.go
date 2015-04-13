@@ -92,6 +92,12 @@ func TestChan(t *testing.T) {
 	expect(1).Not.To.Be.Chan()
 }
 
+func TestPtr(t *testing.T) {
+	expect := New(t)
+	expect(&struct{}{}).To.Be.Ptr()
+	expect(struct{}{}).Not.To.Be.Ptr()
+}
+
 func TestType(t *testing.T) {
 	expect := New(t)
 	type Person struct{}
