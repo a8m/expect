@@ -61,7 +61,7 @@ p := struct {
 	X, Y int
 }{1, 3}
 expect(p).To.Have.Field("X")
-expect(p).To.Have.Field("Y", 3)
+expect(p).To.Have.Field("Y", 3) // With value
 expect(p).Not.To.Have.Field("Z")
 expect(p).To.Have.Fields("X", "Y")
 
