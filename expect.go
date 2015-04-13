@@ -1,9 +1,7 @@
 // Minimalistic BDD-style assertions for Go (inspired by expect.js)
 package expect
 
-import (
-	"testing"
-)
+import "testing"
 
 type Expect struct {
 	To  *To
