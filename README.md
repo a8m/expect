@@ -8,6 +8,14 @@ expect := expect.New(t)
 expect(10).To.Be.Above(1).And.Below(20)
 expect(5).Not.To.Be.Within(0, 4)
 
+// Strings
+expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")
+expect("Foo").To.Match("(?i)foo")
+
+// Equal
+expect(false).Not.To.Equal("false")
+expect(map[int]int{}).To.Equal(map[int]int{})
+
 // Empty
 expect(map[int]int{}).To.Be.Empty()
 expect("").To.Be.Empty()
@@ -30,14 +38,6 @@ expect(struct{}{}).To.Be.Struct()
 expect(&struct{}{}).To.Be.Ptr()
 expect(nil).To.Be.Nil()
 expect(Person{}).To.Be.Type("Person")
-
-// Strings
-expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")
-expect("Foo").To.Match("(?i)foo")
-
-// Equal
-expect(false).Not.To.Equal("false")
-expect(map[int]int{}).To.Equal(map[int]int{})
 
 // Len
 expect("foo").To.Have.Len(3)
