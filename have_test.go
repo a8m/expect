@@ -62,3 +62,14 @@ func TestKeys(t *testing.T) {
 	expect(m2).To.Have.Keys(1, 2, 3)
 	expect(m2).Not.To.Have.Keys(4, 5, 6)
 }
+
+func TestField(t *testing.T) {
+	expect := New(t)
+	p := struct {
+		X, Y int
+	}{1, 3}
+	expect(p).To.Have.Field("X")
+	expect(p).To.Have.Field("Y", 3)
+	expect(p).Not.To.Have.Field("Z")
+	expect(p).Not.To.Have.Field("Y", 4)
+}

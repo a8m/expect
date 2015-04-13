@@ -71,6 +71,33 @@ func (h *Have) Keys(args ...interface{}) *Have {
 	return h
 }
 
+// Assert `field` exist on the given Struct, and has optional value.
+func (h *Have) Field(s string, args ...interface{}) *Have {
+	// Test also value
+	testVal := len(args) > 0
+	msg := Sprintf("field: %v", s)
+	if testVal {
+		msg += Sprintf(" with value: %v", args[0])
+	}
+	msg = h.msg(msg)
+	switch reflect.TypeOf(h.actual).Kind() {
+	case reflect.Struct:
+		v := reflect.ValueOf(h.actual)
+		f := v.FieldByName(s)
+		if (testVal && f.IsValid()) || f.IsValid() == h.assert {
+			// Compare value
+			if testVal && reflect.DeepEqual(f.Interface(), args[0]) != h.assert {
+				h.Error(msg)
+			}
+		} else {
+			h.Error(msg)
+		}
+	default:
+		h.Fatal(invMsg("Struct"))
+	}
+	return h
+}
+
 func (h *Have) msg(s string) string {
 	return errMsg("to have")(h.actual, s, h.assert)
 }
