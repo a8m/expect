@@ -1,3 +1,4 @@
+// Minimalistic BDD-style assertions for Go (inspired by expect.js)
 package expect
 
 import (
@@ -13,6 +14,7 @@ type not struct {
 	To *To
 }
 
+// Return new expect function with `To, To.Be, To.Have` assertions
 func New(t *testing.T) func(v interface{}) *Expect {
 	return func(v interface{}) *Expect {
 		// Be, Not.Be
