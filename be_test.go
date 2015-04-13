@@ -98,6 +98,15 @@ func TestPtr(t *testing.T) {
 	expect(struct{}{}).Not.To.Be.Ptr()
 }
 
+func TestNil(t *testing.T) {
+	expect := New(t)
+	expect(nil).To.Be.Nil()
+	expect(0).Not.To.Be.Nil()
+	var a interface{}
+	a = nil
+	expect(a).To.Be.Nil()
+}
+
 func TestType(t *testing.T) {
 	expect := New(t)
 	type Person struct{}

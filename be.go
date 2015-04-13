@@ -150,6 +150,15 @@ func (b *Be) Ptr() *Be {
 	return b
 }
 
+// Assert given value is nil
+func (b *Be) Nil() *Be {
+	msg := b.msg("nil")
+	if b.actual == nil != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 // Assert given value is type of the given string
 func (b *Be) Type(s string) *Be {
 	msg := b.msg(Sprintf("type %v", s))
