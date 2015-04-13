@@ -1,4 +1,5 @@
-# Minimalistic BDD-style assertions for Go (inspired by expect.js)
+# Expect.go
+> Minimalistic BDD-style assertions for Go (inspired by expect.js)
 
 ```go
 expect := expect.New(t)
