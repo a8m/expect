@@ -13,6 +13,13 @@ func TestLen(t *testing.T) {
 	expect(m).Not.To.Have.Len(1)
 }
 
+func TestCap(t *testing.T) {
+	expect := New(t)
+	expect([2]int{}).To.Have.Cap(2)
+	expect(make([]byte, 2, 10)).To.Have.Cap(10)
+	expect(make(chan string, 2)).Not.To.Have.Cap(10)
+}
+
 func TestKey(t *testing.T) {
 	expect := New(t)
 	m1 := map[string]int{
@@ -72,4 +79,29 @@ func TestField(t *testing.T) {
 	expect(p).To.Have.Field("Y", 3)
 	expect(p).Not.To.Have.Field("Z")
 	expect(p).Not.To.Have.Field("Y", 4)
+}
+
+func TestFields(t *testing.T) {
+	expect := New(t)
+	p := struct {
+		X, Y int
+	}{1, 2}
+	expect(p).To.Have.Fields("X", "Y")
+	expect(p).Not.To.Have.Fields("Z")
+	expect(p).Not.To.Have.Fields("T", "Z")
+}
+
+// Test Method
+type Person struct{}
+
+func (p Person) Hello()  {}
+func (p *Person) Hallo() {}
+
+func TestMethod(t *testing.T) {
+	expect := New(t)
+	p := Person{}
+	expect(p).To.Have.Method("Hello")
+	expect(p).Not.To.Have.Method("Hallo")
+	expect(&p).To.Have.Method("Hallo")
+	expect(&p).To.Have.Method("Hello")
 }
