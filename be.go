@@ -31,6 +31,16 @@ func (b *Be) Below(e float64) *Be {
 	return b
 }
 
+// Assert inclusive numeric range (<= to and >= from)
+func (b *Be) Within(from, to float64) *Be {
+	msg := b.msg(Sprintf("between range %v <= x <= %v", from, to))
+	x := b.Num()
+	if x <= to && x >= from != b.assert {
+		b.Error(msg)
+	}
+	return b
+}
+
 // Assert given value is empty, Array, Slice, Map or String
 func (b *Be) Empty() *Be {
 	msg := b.msg("empty")

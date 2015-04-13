@@ -28,6 +28,15 @@ func TestMatch(t *testing.T) {
 	expect("Foo").To.Match("(?i)foo")
 }
 
+func TestEqual(t *testing.T) {
+	expect := New(t)
+	expect("a").To.Equal("a")
+	expect(1).To.Equal(1)
+	expect(false).Not.To.Equal("true")
+	expect(map[int]int{}).To.Equal(map[int]int{})
+	expect(struct{ X, Y int }{1, 2}).Not.To.Equal(&struct{ X, Y int }{1, 2})
+}
+
 func TestToChaining(t *testing.T) {
 	expect := New(t)
 	expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")

@@ -2,6 +2,7 @@ package expect
 
 import (
 	. "fmt"
+	"reflect"
 	"regexp"
 	"strings"
 	"testing"
@@ -43,7 +44,7 @@ func (t *To) Contains(s string) *To {
 	return t
 }
 
-// Assert  whether a textual regular expression matches a string
+// Assert whether a textual regular expression matches a string
 func (t *To) Match(s string) *To {
 	msg := t.msg(Sprintf("matches %v", s))
 	matched, err := regexp.MatchString(s, t.Str())
@@ -51,6 +52,15 @@ func (t *To) Match(s string) *To {
 		t.Fatal(err)
 	}
 	if matched != t.assert {
+		t.Error(msg)
+	}
+	return t
+}
+
+// Assert two values are equals(deeply)
+func (t *To) Equal(exp interface{}) *To {
+	msg := t.msg(Sprint("equal to %v", exp))
+	if reflect.DeepEqual(t.actual, exp) != t.assert {
 		t.Error(msg)
 	}
 	return t

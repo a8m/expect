@@ -17,6 +17,13 @@ func TestBelow(t *testing.T) {
 	expect(10).Not.To.Be.Below(0)
 }
 
+func TestWithin(t *testing.T) {
+	expect := New(t)
+	expect(10).To.Be.Within(10, 20)
+	expect(5).To.Be.Within(5, 5)
+	expect(1).Not.To.Be.Within(2, 1)
+}
+
 func TestEmpty(t *testing.T) {
 	expect := New(t)
 	expect("").To.Be.Empty()
