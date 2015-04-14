@@ -13,6 +13,7 @@ expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")
 expect("Foo").To.Match("(?i)foo")
 
 // Equal
+expect(res.StatusCode).To.Equal(200)
 expect(false).Not.To.Equal("false")
 expect(map[int]int{}).To.Equal(map[int]int{})
 
