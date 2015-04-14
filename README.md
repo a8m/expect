@@ -60,12 +60,7 @@ expect(m1).To.Have.Keys("a", "b")
 p := struct {
 	X, Y int
 }{1, 3}
-expect(p).To.Have.Field("Y", 3) // With value
-expect(p).To.Have.Fields("X", "Y")
-
-// Structs & Pointers methods
-expect(p).Not.To.Have.Method("Hallo")
-expect(&p).To.Have.Method("Hallo")
+expect(p).To.Have.Field("Y", 3).And.Field("X", 1)
 ```
 
 ## License
