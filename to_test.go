@@ -37,6 +37,14 @@ func TestEqual(t *testing.T) {
 	expect(struct{ X, Y int }{1, 2}).Not.To.Equal(&struct{ X, Y int }{1, 2})
 }
 
+func TestPanic(t *testing.T) {
+	expect := New(t)
+	expect(func() {}).Not.To.Panic()
+	expect(func() {
+		panic("foo")
+	}).To.Panic()
+}
+
 func TestToChaining(t *testing.T) {
 	expect := New(t)
 	expect("foobarbaz").To.StartWith("foo").And.EndWith("baz").And.Contains("bar")

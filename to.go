@@ -66,6 +66,33 @@ func (t *To) Equal(exp interface{}) *To {
 	return t
 }
 
+// Assert func to panic
+func (t *To) Panic() *To {
+	switch reflect.TypeOf(t.actual).Kind() {
+	case reflect.Func:
+		fn := reflect.ValueOf(t.actual)
+		if p, m := ifPanic(fn); p != t.assert {
+			t.Error(t.msg(Sprintf("panic: %v", m)))
+		}
+	default:
+		t.Fatal(invMsg("func"))
+
+	}
+	return t
+}
+
+func ifPanic(f reflect.Value) (isPnc bool, msg interface{}) {
+	func() {
+		defer func() {
+			if msg = recover(); msg != nil {
+				isPnc = true
+			}
+		}()
+		f.Call([]reflect.Value{})
+	}()
+	return
+}
+
 func (t *To) Str() (s string) {
 	if s, ok := t.actual.(string); ok {
 		return s
