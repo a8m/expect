@@ -62,6 +62,12 @@ p := struct {
 	X, Y int
 }{1, 3}
 expect(p).To.Have.Field("Y", 3).And.Field("X", 1)
+
+// Functions
+expect(func() {}).Not.To.Panic()
+expect(func() {
+	panic("foo")
+}).To.Panic()
 ```
 
 ## License
