@@ -67,11 +67,15 @@ func (t *To) Equal(exp interface{}) *To {
 }
 
 // Assert func to panic
-func (t *To) Panic() *To {
+func (t *To) Panic(args ...interface{}) *To {
+	testMsg := len(args) > 0
 	switch t.actual.(type) {
 	case func():
 		fn := reflect.ValueOf(t.actual)
-		if p, m := ifPanic(fn); p != t.assert {
+		if p, m := ifPanic(fn); p != t.assert || testMsg && args[0] == m != t.assert {
+			if testMsg {
+				m = args[0]
+			}
 			t.Error(t.msg(Sprintf("panic: %v", m)))
 		}
 	default:

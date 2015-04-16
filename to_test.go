@@ -43,6 +43,9 @@ func TestPanic(t *testing.T) {
 	expect(func() {
 		panic("foo")
 	}).To.Panic()
+	expect(func() {
+		panic("bar")
+	}).To.Panic("bar")
 }
 
 func TestToChaining(t *testing.T) {
