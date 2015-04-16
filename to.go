@@ -68,8 +68,8 @@ func (t *To) Equal(exp interface{}) *To {
 
 // Assert func to panic
 func (t *To) Panic() *To {
-	switch reflect.TypeOf(t.actual).Kind() {
-	case reflect.Func:
+	switch t.actual.(type) {
+	case func():
 		fn := reflect.ValueOf(t.actual)
 		if p, m := ifPanic(fn); p != t.assert {
 			t.Error(t.msg(Sprintf("panic: %v", m)))
