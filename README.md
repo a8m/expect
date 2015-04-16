@@ -68,6 +68,9 @@ expect(func() {}).Not.To.Panic()
 expect(func() {
 	panic("foo")
 }).To.Panic()
+expect(func() {
+	panic("bar")
+}).To.Panic("bar")
 ```
 
 ## License
