@@ -1,4 +1,4 @@
-# Expect.go
+# Expect.go  [![Build status][travis-image]][travis-url]
 > Minimalistic BDD-style assertions for Go (inspired by expect.js)
 
 ```go
@@ -75,3 +75,6 @@ expect(func() {
 
 ## License
 MIT
+
+[travis-image]: https://img.shields.io/travis/a8m/expect.svg?style=flat-square
+[travis-url]: https://travis-ci.org/a8m/expect
