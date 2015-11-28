@@ -5,10 +5,10 @@ import "testing"
 
 type Expect struct {
 	To  *To
-	Not *not
+	Not *Not
 }
 
-type not struct {
+type Not struct {
 	To *To
 }
 
@@ -29,7 +29,7 @@ func New(t *testing.T) func(v interface{}) *Expect {
 		nto = To{t, &nbe, &nhave, &nto, v, false}
 		return &Expect{
 			To:  &to,
-			Not: &not{&nto},
+			Not: &Not{&nto},
 		}
 	}
 }
