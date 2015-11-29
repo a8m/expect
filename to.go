@@ -59,7 +59,7 @@ func (t *To) Match(s string) *To {
 
 // Assert two values are equals(deeply)
 func (t *To) Equal(exp interface{}) *To {
-	msg := t.msg(Sprint("equal to %v", exp))
+	msg := t.msg(Sprintf("equal to %v", exp))
 	if reflect.DeepEqual(t.actual, exp) != t.assert {
 		t.Error(msg)
 	}
