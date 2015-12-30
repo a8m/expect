@@ -11,6 +11,13 @@ func TestLen(t *testing.T) {
 	m := map[string]int{}
 	expect(m).To.Have.Len(0)
 	expect(m).Not.To.Have.Len(1)
+	s := []string{"a", "b"}
+	expect(s).To.Have.Len(2)
+	expect(s).Not.To.Have.Len(1)
+	c := make(chan bool, 5)
+	c <- true
+	expect(c).To.Have.Len(1)
+	expect(c).Not.To.Have.Len(0)
 }
 
 func TestCap(t *testing.T) {
