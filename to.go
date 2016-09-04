@@ -21,7 +21,7 @@ type To struct {
 func (t *To) StartWith(s string) *To {
 	msg := t.msg(Sprintf("start with %v", s))
 	if strings.HasPrefix(t.Str(), s) != t.assert {
-		t.Error(msg)
+		fail(t.T, 2, msg)
 	}
 	return t
 }
@@ -30,7 +30,7 @@ func (t *To) StartWith(s string) *To {
 func (t *To) EndWith(s string) *To {
 	msg := t.msg(Sprintf("end with %v", s))
 	if strings.HasSuffix(t.Str(), s) != t.assert {
-		t.Error(msg)
+		fail(t.T, 2, msg)
 	}
 	return t
 }
@@ -39,7 +39,7 @@ func (t *To) EndWith(s string) *To {
 func (t *To) Contains(s string) *To {
 	msg := t.msg(Sprintf("contains %v", s))
 	if strings.Contains(t.Str(), s) != t.assert {
-		t.Error(msg)
+		fail(t.T, 2, msg)
 	}
 	return t
 }
@@ -52,7 +52,7 @@ func (t *To) Match(s string) *To {
 		t.Fatal(err)
 	}
 	if matched != t.assert {
-		t.Error(msg)
+		fail(t.T, 2, msg)
 	}
 	return t
 }
@@ -61,7 +61,7 @@ func (t *To) Match(s string) *To {
 func (t *To) Equal(exp interface{}) *To {
 	msg := t.msg(Sprintf("equal to %v", exp))
 	if reflect.DeepEqual(t.actual, exp) != t.assert {
-		t.Error(msg)
+		fail(t.T, 2, msg)
 	}
 	return t
 }
@@ -76,7 +76,7 @@ func (t *To) Panic(args ...interface{}) *To {
 			if testMsg {
 				m = args[0]
 			}
-			t.Error(t.msg(Sprintf("panic: %v", m)))
+			fail(t.T, 2, t.msg(Sprintf("panic: %v", m)))
 		}
 	default:
 		t.Fatal(invMsg("func"))
