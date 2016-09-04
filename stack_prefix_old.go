@@ -13,7 +13,7 @@ import (
 func stackPrefix(stack []uintptr) []string {
 	var output []string
 	for _, pc := range stack {
-		file, line := runtime.FuncForPC(pc).FileLine()
+		file, line := runtime.FuncForPC(pc).FileLine(pc)
 		output = append(output, fmt.Sprintf("%s:%d", file, line))
 	}
 	return output
