@@ -18,7 +18,7 @@ func (h *Have) Len(i int) *Have {
 	msg := h.msg(Sprintf("length of %v", i))
 	if l, ok := length(h.actual); ok {
 		if l == i != h.assert {
-			h.Error(msg)
+			fail(h.T, 2, msg)
 		}
 	} else {
 		h.Fatal(invMsg("Array, Slice, Map or String"))
@@ -32,7 +32,7 @@ func (h *Have) Cap(i int) *Have {
 	switch reflect.TypeOf(h.actual).Kind() {
 	case reflect.Array, reflect.Slice, reflect.Chan:
 		if reflect.ValueOf(h.actual).Cap() == i != h.assert {
-			h.Error(msg)
+			fail(h.T, 2, msg)
 		}
 	default:
 		h.Fatal(invMsg("Array, Slice or Chan"))
@@ -56,10 +56,10 @@ func (h *Have) Key(args ...interface{}) *Have {
 		if (testVal && k.IsValid()) || k.IsValid() == h.assert {
 			// Compare value
 			if testVal && reflect.DeepEqual(k.Interface(), args[1]) != h.assert {
-				h.Error(msg)
+				fail(h.T, 2, msg)
 			}
 		} else {
-			h.Error(msg)
+			fail(h.T, 2, msg)
 		}
 	default:
 		h.Fatal(invMsg("Map"))
@@ -76,7 +76,7 @@ func (h *Have) Keys(args ...interface{}) *Have {
 		for _, k := range args {
 			vk := v.MapIndex(reflect.ValueOf(k))
 			if vk.IsValid() != h.assert {
-				h.Error(msg)
+				fail(h.T, 2, msg)
 			}
 		}
 	default:
@@ -101,10 +101,10 @@ func (h *Have) Field(s string, args ...interface{}) *Have {
 		if (testVal && f.IsValid()) || f.IsValid() == h.assert {
 			// Compare value
 			if testVal && reflect.DeepEqual(f.Interface(), args[0]) != h.assert {
-				h.Error(msg)
+				fail(h.T, 2, msg)
 			}
 		} else {
-			h.Error(msg)
+			fail(h.T, 2, msg)
 		}
 	default:
 		h.Fatal(invMsg("Struct"))
@@ -120,7 +120,7 @@ func (h *Have) Fields(args ...string) *Have {
 		v := reflect.ValueOf(h.actual)
 		for _, f := range args {
 			if v.FieldByName(f).IsValid() != h.assert {
-				h.Error(msg)
+				fail(h.T, 2, msg)
 			}
 		}
 	default:
@@ -136,7 +136,7 @@ func (h *Have) Method(m string) *Have {
 	case reflect.Struct, reflect.Ptr:
 		v := reflect.ValueOf(h.actual)
 		if v.MethodByName(m).IsValid() != h.assert {
-			h.Error(msg)
+			fail(h.T, 2, msg)
 		}
 	default:
 		h.Fatal(invMsg("Struct or Ptr"))
