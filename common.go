@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"runtime"
 	"strings"
-	"testing"
 )
 
 func errMsg(t string) func(act, exp interface{}, assert bool) string {
@@ -35,7 +34,7 @@ func length(v interface{}) (int, bool) {
 
 // fail creates a message including the stack trace returned from
 // runtime.Caller
-func fail(t *testing.T, callers int, msg string) {
+func fail(t T, callers int, msg string) {
 	stack := stackPrefix(fullStack(callers + 1))
 	// It makes sense to have the most recent call closest to the
 	// message.
