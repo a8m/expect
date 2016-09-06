@@ -1,7 +1,9 @@
-// Minimalistic BDD-style assertions for Go (inspired by expect.js)
 package expect
 
-import "testing"
+type T interface {
+	Errorf(format string, args ...interface{})
+	Fatal(...interface{})
+}
 
 type Expect struct {
 	To  *To
@@ -13,23 +15,11 @@ type Not struct {
 }
 
 // Return new expect function with `To, To.Be, To.Have` assertions
-func New(t *testing.T) func(v interface{}) *Expect {
+func New(t T) func(v interface{}) *Expect {
 	return func(v interface{}) *Expect {
-		// Be, Not.Be
-		var be, nbe Be
-		be = Be{t, &be, v, true}
-		nbe = Be{t, &nbe, v, false}
-		// Have, Not.Have
-		var have, nhave Have
-		have = Have{t, &have, v, true}
-		nhave = Have{t, &nhave, v, false}
-		// To, Not.To
-		var to, nto To
-		to = To{t, &be, &have, &to, v, true}
-		nto = To{t, &nbe, &nhave, &nto, v, false}
 		return &Expect{
-			To:  &to,
-			Not: &Not{&nto},
+			To:  NewTo(t, v, true),
+			Not: &Not{To: NewTo(t, v, false)},
 		}
 	}
 }

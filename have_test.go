@@ -1,12 +1,16 @@
-package expect
+package expect_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/a8m/expect"
+)
 
 // TODO(Ariel): Create mock that implement TB interface
 // and stub `Error` and `Fatal`
 
 func TestLen(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	expect("foo").To.Have.Len(3)
 	m := map[string]int{}
 	expect(m).To.Have.Len(0)
@@ -21,14 +25,14 @@ func TestLen(t *testing.T) {
 }
 
 func TestCap(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	expect([2]int{}).To.Have.Cap(2)
 	expect(make([]byte, 2, 10)).To.Have.Cap(10)
 	expect(make(chan string, 2)).Not.To.Have.Cap(10)
 }
 
 func TestKey(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	m1 := map[string]int{
 		"a": 1,
 		"b": 2,
@@ -59,7 +63,7 @@ func TestKey(t *testing.T) {
 }
 
 func TestKeys(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	m1 := map[string]int{
 		"a": 1,
 		"b": 2,
@@ -78,7 +82,7 @@ func TestKeys(t *testing.T) {
 }
 
 func TestField(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	p := struct {
 		X, Y int
 	}{1, 3}
@@ -89,7 +93,7 @@ func TestField(t *testing.T) {
 }
 
 func TestFields(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	p := struct {
 		X, Y int
 	}{1, 2}
@@ -105,7 +109,7 @@ func (p Person) Hello()  {}
 func (p *Person) Hallo() {}
 
 func TestMethod(t *testing.T) {
-	expect := New(t)
+	expect := expect.New(t)
 	p := Person{}
 	expect(p).To.Have.Method("Hello")
 	expect(p).Not.To.Have.Method("Hallo")

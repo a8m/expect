@@ -3,21 +3,30 @@ package expect
 import (
 	. "fmt"
 	"reflect"
-	"testing"
 )
 
 type Be struct {
-	*testing.T
 	And    *Be
+	t      T
 	actual interface{}
 	assert bool
+}
+
+func NewBe(t T, actual interface{}, assert bool) *Be {
+	be := &Be{
+		t:      t,
+		actual: actual,
+		assert: assert,
+	}
+	be.And = be
+	return be
 }
 
 // Assert numeric value above the given value (> n)
 func (b *Be) Above(e float64) *Be {
 	msg := b.msg(Sprintf("above %v", e))
 	if b.Num() > e != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -26,7 +35,7 @@ func (b *Be) Above(e float64) *Be {
 func (b *Be) Below(e float64) *Be {
 	msg := b.msg(Sprintf("below %v", e))
 	if b.Num() < e != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -36,7 +45,7 @@ func (b *Be) Within(from, to float64) *Be {
 	msg := b.msg(Sprintf("between range %v <= x <= %v", from, to))
 	x := b.Num()
 	if x <= to && x >= from != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -46,10 +55,10 @@ func (b *Be) Empty() *Be {
 	msg := b.msg("empty")
 	if i, ok := length(b.actual); ok {
 		if i == 0 != b.assert {
-			b.Error(msg)
+			fail(b.t, 2, msg)
 		}
 	} else {
-		b.Fatal(invMsg("Array, Slice, Map or String"))
+		b.t.Fatal(invMsg("Array, Slice, Map or String"))
 	}
 	return b
 }
@@ -69,7 +78,7 @@ func (b *Be) Ok() *Be {
 		exp = b.actual != nil
 	}
 	if exp != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -78,7 +87,7 @@ func (b *Be) Ok() *Be {
 func (b *Be) String() *Be {
 	msg := b.msg("string")
 	if _, ok := b.actual.(string); ok != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -87,7 +96,7 @@ func (b *Be) String() *Be {
 func (b *Be) Int() *Be {
 	msg := b.msg("int")
 	if _, ok := b.actual.(int); ok != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -101,7 +110,7 @@ func (b *Be) Float() *Be {
 		exp = true
 	}
 	if exp != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -110,7 +119,7 @@ func (b *Be) Float() *Be {
 func (b *Be) Bool() *Be {
 	msg := b.msg("boolean")
 	if _, ok := b.actual.(bool); ok != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -119,7 +128,7 @@ func (b *Be) Bool() *Be {
 func (b *Be) Map() *Be {
 	msg := b.msg("map")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Map != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -128,7 +137,7 @@ func (b *Be) Map() *Be {
 func (b *Be) Array() *Be {
 	msg := b.msg("array")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Array != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -137,7 +146,7 @@ func (b *Be) Array() *Be {
 func (b *Be) Slice() *Be {
 	msg := b.msg("slice")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Slice != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -146,7 +155,7 @@ func (b *Be) Slice() *Be {
 func (b *Be) Chan() *Be {
 	msg := b.msg("channel")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Chan != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -155,7 +164,7 @@ func (b *Be) Chan() *Be {
 func (b *Be) Struct() *Be {
 	msg := b.msg("struct")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Struct != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -164,7 +173,7 @@ func (b *Be) Struct() *Be {
 func (b *Be) Ptr() *Be {
 	msg := b.msg("pointer")
 	if reflect.TypeOf(b.actual).Kind() == reflect.Ptr != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -173,7 +182,7 @@ func (b *Be) Ptr() *Be {
 func (b *Be) Nil() *Be {
 	msg := b.msg("nil")
 	if b.actual == nil != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -182,7 +191,7 @@ func (b *Be) Nil() *Be {
 func (b *Be) Type(s string) *Be {
 	msg := b.msg(Sprintf("type %v", s))
 	if reflect.TypeOf(b.actual).Name() == s != b.assert {
-		b.Error(msg)
+		fail(b.t, 2, msg)
 	}
 	return b
 }
@@ -201,7 +210,7 @@ func (b *Be) Num() float64 {
 	case reflect.Float32, reflect.Float64:
 		return float64(rv.Float())
 	default:
-		b.Fatal(invMsg("numeric"))
+		b.t.Fatal(invMsg("numeric"))
 		return 0
 	}
 }
