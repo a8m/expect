@@ -1,4 +1,4 @@
-# Expect.go  [![Build status][travis-image]][travis-url]
+# Expect.go  [![Build status][travis-image]][travis-url] [![License][license-image]][license-url] [![GoDoc][godoc-img]][godoc-url]
 > Minimalistic BDD-style assertions for Go (inspired by expect.js)
 
 ```go
@@ -78,3 +78,7 @@ MIT
 
 [travis-image]: https://img.shields.io/travis/a8m/expect.svg?style=flat-square
 [travis-url]: https://travis-ci.org/a8m/expect
+[license-url]:   LICENSE
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+[godoc-url]:     https://godoc.org/github.com/a8m/expect
+[godoc-img]:     https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square
