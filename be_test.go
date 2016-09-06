@@ -137,3 +137,20 @@ func TestBeChaining(t *testing.T) {
 	expect(10).To.Be.Above(0).And.Below(20)
 	expect(10).Not.To.Be.Above(20).And.Below(0)
 }
+
+func TestBeFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	expect(10).To.Be.Above(0).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+		t.Fatalf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+	expect(10).To.Be.Above(20).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}

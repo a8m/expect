@@ -116,3 +116,39 @@ func TestMethod(t *testing.T) {
 	expect(&p).To.Have.Method("Hallo")
 	expect(&p).To.Have.Method("Hello")
 }
+
+func TestHaveFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	l := []string{"foo"}
+	expect(l).To.Have.Len(1).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+		t.Fatalf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+	expect(l).To.Have.Len(3).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}
+
+func TestNotHaveFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	l := []string{"foo"}
+	expect(l).Not.To.Have.Len(3).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+		t.Fatalf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+	expect(l).Not.To.Have.Len(1).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}

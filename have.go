@@ -6,6 +6,7 @@ import (
 )
 
 type Have struct {
+	Else   *Else
 	And    *Have
 	t      T
 	actual interface{}
@@ -18,6 +19,7 @@ func NewHave(t T, actual interface{}, assert bool) *Have {
 		actual: actual,
 		assert: assert,
 	}
+	have.Else = NewElse(t)
 	have.And = have
 	return have
 }
@@ -27,7 +29,7 @@ func (h *Have) Len(i int) *Have {
 	msg := h.msg(Sprintf("length of %v", i))
 	if l, ok := length(h.actual); ok {
 		if l == i != h.assert {
-			fail(h.t, 2, msg)
+			h.fail(2, msg)
 		}
 	} else {
 		h.t.Fatal(invMsg("Array, Slice, Map or String"))
@@ -41,7 +43,7 @@ func (h *Have) Cap(i int) *Have {
 	switch reflect.TypeOf(h.actual).Kind() {
 	case reflect.Array, reflect.Slice, reflect.Chan:
 		if reflect.ValueOf(h.actual).Cap() == i != h.assert {
-			fail(h.t, 2, msg)
+			h.fail(2, msg)
 		}
 	default:
 		h.t.Fatal(invMsg("Array, Slice or Chan"))
@@ -65,10 +67,10 @@ func (h *Have) Key(args ...interface{}) *Have {
 		if (testVal && k.IsValid()) || k.IsValid() == h.assert {
 			// Compare value
 			if testVal && reflect.DeepEqual(k.Interface(), args[1]) != h.assert {
-				fail(h.t, 2, msg)
+				h.fail(2, msg)
 			}
 		} else {
-			fail(h.t, 2, msg)
+			h.fail(2, msg)
 		}
 	default:
 		h.t.Fatal(invMsg("Map"))
@@ -85,7 +87,7 @@ func (h *Have) Keys(args ...interface{}) *Have {
 		for _, k := range args {
 			vk := v.MapIndex(reflect.ValueOf(k))
 			if vk.IsValid() != h.assert {
-				fail(h.t, 2, msg)
+				h.fail(2, msg)
 			}
 		}
 	default:
@@ -110,10 +112,10 @@ func (h *Have) Field(s string, args ...interface{}) *Have {
 		if (testVal && f.IsValid()) || f.IsValid() == h.assert {
 			// Compare value
 			if testVal && reflect.DeepEqual(f.Interface(), args[0]) != h.assert {
-				fail(h.t, 2, msg)
+				h.fail(2, msg)
 			}
 		} else {
-			fail(h.t, 2, msg)
+			h.fail(2, msg)
 		}
 	default:
 		h.t.Fatal(invMsg("Struct"))
@@ -129,7 +131,7 @@ func (h *Have) Fields(args ...string) *Have {
 		v := reflect.ValueOf(h.actual)
 		for _, f := range args {
 			if v.FieldByName(f).IsValid() != h.assert {
-				fail(h.t, 2, msg)
+				h.fail(2, msg)
 			}
 		}
 	default:
@@ -145,12 +147,17 @@ func (h *Have) Method(m string) *Have {
 	case reflect.Struct, reflect.Ptr:
 		v := reflect.ValueOf(h.actual)
 		if v.MethodByName(m).IsValid() != h.assert {
-			fail(h.t, 2, msg)
+			h.fail(2, msg)
 		}
 	default:
 		h.t.Fatal(invMsg("Struct or Ptr"))
 	}
 	return h
+}
+
+func (h *Have) fail(callers int, msg string) {
+	h.Else.failed = true
+	fail(h.t, callers, msg)
 }
 
 func (h *Have) msg(s string) string {
