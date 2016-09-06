@@ -3,6 +3,7 @@ package expect
 type T interface {
 	Errorf(format string, args ...interface{})
 	Fatal(...interface{})
+	FailNow()
 }
 
 type Expect struct {

@@ -15,6 +15,7 @@ type mockT struct {
 	FatalInput  struct {
 		Arg0 chan []interface{}
 	}
+	FailNowCalled chan bool
 }
 
 func newMockT() *mockT {
@@ -24,6 +25,7 @@ func newMockT() *mockT {
 	m.ErrorfInput.Args = make(chan []interface{}, 100)
 	m.FatalCalled = make(chan bool, 100)
 	m.FatalInput.Arg0 = make(chan []interface{}, 100)
+	m.FailNowCalled = make(chan bool, 100)
 	return m
 }
 func (m *mockT) Errorf(format string, args ...interface{}) {
@@ -34,4 +36,7 @@ func (m *mockT) Errorf(format string, args ...interface{}) {
 func (m *mockT) Fatal(arg0 ...interface{}) {
 	m.FatalCalled <- true
 	m.FatalInput.Arg0 <- arg0
+}
+func (m *mockT) FailNow() {
+	m.FailNowCalled <- true
 }

@@ -58,3 +58,37 @@ func TestToChaining(t *testing.T) {
 	expect("foo").Not.To.StartWith("bar").And.EndWith("baz").And.Contains("bob")
 	expect("foo").To.Match("f").And.Match("(?i)F")
 }
+
+func TestToFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	expect("foo").To.Equal("foo").Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+		t.Fatalf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+	expect("foo").To.Equal("bar").Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}
+
+func TestNotToFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	expect("foo").Not.To.Equal("bar").Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+		t.Fatalf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+	expect("foo").Not.To.Equal("foo").Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}
