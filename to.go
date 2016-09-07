@@ -23,9 +23,9 @@ func NewTo(t T, actual interface{}, assert bool) *To {
 		actual: actual,
 		assert: assert,
 	}
-	to.Be = NewBe(t, actual, assert)
-	to.Have = NewHave(t, actual, assert)
 	to.Else = NewElse(t)
+	to.Be = NewBe(t, to.Else, actual, assert)
+	to.Have = NewHave(t, to.Else, actual, assert)
 	to.And = to
 	return to
 }
