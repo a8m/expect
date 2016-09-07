@@ -98,6 +98,21 @@ func (t *To) Panic(args ...interface{}) *To {
 	return t
 }
 
+func (t *To) Pass(matcher Matcher) *To {
+	err := matcher.Match(t.actual)
+	switch t.assert {
+	case true:
+		if err != nil {
+			t.fail(2, t.msg(err.Error()))
+		}
+	case false:
+		if err == nil {
+			t.fail(2, t.msg(fmt.Sprintf("match %#v", matcher)))
+		}
+	}
+	return t
+}
+
 func (t *To) fail(callers int, msg string) {
 	fail(t.t, callers+1, msg)
 	t.Else.failed = true

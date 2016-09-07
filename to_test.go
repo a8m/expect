@@ -1,6 +1,8 @@
 package expect_test
 
 import (
+	"errors"
+	"strings"
 	"testing"
 
 	"github.com/a8m/expect"
@@ -90,5 +92,78 @@ func TestNotToFailNow(t *testing.T) {
 	case <-mockT.FailNowCalled:
 	default:
 		t.Fatalf("Expected FailNow() on failing test to be called")
+	}
+}
+
+func TestPassCustomMatcher(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+
+	mockMatcher := newMockMatcher()
+	mockMatcher.MatchOutput.Ret0 <- nil
+	expect("foo").To.Pass(mockMatcher)
+	select {
+	case actual := <-mockMatcher.MatchInput.Actual:
+		if actual != "foo" {
+			t.Errorf(`Expected matcher to be called with "foo"`)
+		}
+	default:
+		t.Errorf("Expected matcher to be called")
+	}
+	select {
+	case <-mockT.ErrorfInput.Args:
+		t.Errorf("Expected Errorf() on passing test not to be called")
+	default:
+	}
+
+	uniqueError := "I am a unique error"
+	mockMatcher.MatchOutput.Ret0 <- errors.New(uniqueError)
+	expect("foo").To.Pass(mockMatcher)
+	select {
+	case args := <-mockT.ErrorfInput.Args:
+		if len(args) != 2 {
+			t.Fatalf("Expected %#v to have length 2", args)
+		}
+		s, ok := args[1].(string)
+		if !ok {
+			t.Errorf("Expected arg %#v to be a string", args[1])
+		}
+		if !strings.Contains(s, uniqueError) {
+			t.Errorf(`Expected message "%s" to contain "%s"`, s, uniqueError)
+		}
+	default:
+		t.Errorf("Expected Errorf() on failing test to be called")
+	}
+}
+
+func TestNotPassCustomMatcher(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+
+	mockMatcher := newMockMatcher()
+	mockMatcher.MatchOutput.Ret0 <- errors.New("foo")
+	expect("foo").Not.To.Pass(mockMatcher)
+	select {
+	case <-mockT.ErrorfInput.Args:
+		t.Errorf("Expected Errorf() on passing test not to be called")
+	default:
+	}
+
+	mockMatcher.MatchOutput.Ret0 <- nil
+	expect("foo").Not.To.Pass(mockMatcher)
+	select {
+	case args := <-mockT.ErrorfInput.Args:
+		if len(args) != 2 {
+			t.Fatalf("Expected %#v to have length 2", args)
+		}
+		s, ok := args[1].(string)
+		if !ok {
+			t.Errorf("Expected arg %#v to be a string", args[1])
+		}
+		if !strings.Contains(s, "match &expect_test.mockMatcher{") {
+			t.Errorf(`Expected message "%s" to contain "match mockMatcher{"`, s)
+		}
+	default:
+		t.Errorf("Expected Errorf() on failing test to be called")
 	}
 }
