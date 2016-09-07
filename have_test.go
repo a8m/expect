@@ -124,14 +124,14 @@ func TestHaveFailNow(t *testing.T) {
 	expect(l).To.Have.Len(1).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
-		t.Fatalf("Expected FailNow() on passing test not to be called")
+		t.Errorf("Expected FailNow() on passing test not to be called")
 	default:
 	}
 	expect(l).To.Have.Len(3).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
 	default:
-		t.Fatalf("Expected FailNow() on failing test to be called")
+		t.Errorf("Expected FailNow() on failing test to be called")
 	}
 }
 
@@ -142,13 +142,13 @@ func TestNotHaveFailNow(t *testing.T) {
 	expect(l).Not.To.Have.Len(3).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
-		t.Fatalf("Expected FailNow() on passing test not to be called")
+		t.Errorf("Expected FailNow() on passing test not to be called")
 	default:
 	}
 	expect(l).Not.To.Have.Len(1).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
 	default:
-		t.Fatalf("Expected FailNow() on failing test to be called")
+		t.Errorf("Expected FailNow() on failing test to be called")
 	}
 }

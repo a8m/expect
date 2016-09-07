@@ -67,14 +67,14 @@ func TestToFailNow(t *testing.T) {
 	expect("foo").To.Equal("foo").Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
-		t.Fatalf("Expected FailNow() on passing test not to be called")
+		t.Errorf("Expected FailNow() on passing test not to be called")
 	default:
 	}
 	expect("foo").To.Equal("bar").Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
 	default:
-		t.Fatalf("Expected FailNow() on failing test to be called")
+		t.Errorf("Expected FailNow() on failing test to be called")
 	}
 }
 
@@ -84,14 +84,36 @@ func TestNotToFailNow(t *testing.T) {
 	expect("foo").Not.To.Equal("bar").Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
-		t.Fatalf("Expected FailNow() on passing test not to be called")
+		t.Errorf("Expected FailNow() on passing test not to be called")
 	default:
 	}
 	expect("foo").Not.To.Equal("foo").Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
 	default:
-		t.Fatalf("Expected FailNow() on failing test to be called")
+		t.Errorf("Expected FailNow() on failing test to be called")
+	}
+}
+
+func TestToAndHaveFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	expect("foo").To.Equal("bar").And.Have.Len(3).Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Errorf("Expected FailNow() on failing test to be called")
+	}
+}
+
+func TestToAndBeFailNow(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	expect("foo").To.Equal("bar").And.Be.String().Else.FailNow()
+	select {
+	case <-mockT.FailNowCalled:
+	default:
+		t.Errorf("Expected FailNow() on failing test to be called")
 	}
 }
 

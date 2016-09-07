@@ -13,13 +13,13 @@ type Have struct {
 	assert bool
 }
 
-func NewHave(t T, actual interface{}, assert bool) *Have {
+func newHave(t T, e *Else, actual interface{}, assert bool) *Have {
 	have := &Have{
+		Else:   e,
 		t:      t,
 		actual: actual,
 		assert: assert,
 	}
-	have.Else = NewElse(t)
 	have.And = have
 	return have
 }

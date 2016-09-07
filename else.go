@@ -5,7 +5,7 @@ type Else struct {
 	failed bool
 }
 
-func NewElse(t T) *Else {
+func newElse(t T) *Else {
 	return &Else{
 		t: t,
 	}

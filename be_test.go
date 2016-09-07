@@ -144,13 +144,13 @@ func TestBeFailNow(t *testing.T) {
 	expect(10).To.Be.Above(0).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
-		t.Fatalf("Expected FailNow() on passing test not to be called")
+		t.Errorf("Expected FailNow() on passing test not to be called")
 	default:
 	}
 	expect(10).To.Be.Above(20).Else.FailNow()
 	select {
 	case <-mockT.FailNowCalled:
 	default:
-		t.Fatalf("Expected FailNow() on failing test to be called")
+		t.Errorf("Expected FailNow() on failing test to be called")
 	}
 }

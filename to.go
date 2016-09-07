@@ -17,15 +17,15 @@ type To struct {
 	assert bool
 }
 
-func NewTo(t T, actual interface{}, assert bool) *To {
+func newTo(t T, actual interface{}, assert bool) *To {
 	to := &To{
 		t:      t,
 		actual: actual,
 		assert: assert,
 	}
-	to.Be = NewBe(t, actual, assert)
-	to.Have = NewHave(t, actual, assert)
-	to.Else = NewElse(t)
+	to.Else = newElse(t)
+	to.Be = newBe(t, to.Else, actual, assert)
+	to.Have = newHave(t, to.Else, actual, assert)
 	to.And = to
 	return to
 }
