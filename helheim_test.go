@@ -40,3 +40,26 @@ func (m *mockT) Fatal(arg0 ...interface{}) {
 func (m *mockT) FailNow() {
 	m.FailNowCalled <- true
 }
+
+type mockMatcher struct {
+	MatchCalled chan bool
+	MatchInput  struct {
+		Actual chan interface{}
+	}
+	MatchOutput struct {
+		Ret0 chan error
+	}
+}
+
+func newMockMatcher() *mockMatcher {
+	m := &mockMatcher{}
+	m.MatchCalled = make(chan bool, 100)
+	m.MatchInput.Actual = make(chan interface{}, 100)
+	m.MatchOutput.Ret0 = make(chan error, 100)
+	return m
+}
+func (m *mockMatcher) Match(actual interface{}) error {
+	m.MatchCalled <- true
+	m.MatchInput.Actual <- actual
+	return <-m.MatchOutput.Ret0
+}
