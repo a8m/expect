@@ -13,7 +13,7 @@ type Have struct {
 	assert bool
 }
 
-func NewHave(t T, e *Else, actual interface{}, assert bool) *Have {
+func newHave(t T, e *Else, actual interface{}, assert bool) *Have {
 	have := &Have{
 		Else:   e,
 		t:      t,

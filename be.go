@@ -13,7 +13,7 @@ type Be struct {
 	assert bool
 }
 
-func NewBe(t T, e *Else, actual interface{}, assert bool) *Be {
+func newBe(t T, e *Else, actual interface{}, assert bool) *Be {
 	be := &Be{
 		Else:   e,
 		t:      t,

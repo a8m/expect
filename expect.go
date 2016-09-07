@@ -19,8 +19,8 @@ type Not struct {
 func New(t T) func(v interface{}) *Expect {
 	return func(v interface{}) *Expect {
 		return &Expect{
-			To:  NewTo(t, v, true),
-			Not: &Not{To: NewTo(t, v, false)},
+			To:  newTo(t, v, true),
+			Not: &Not{To: newTo(t, v, false)},
 		}
 	}
 }
