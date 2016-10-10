@@ -71,6 +71,9 @@ expect(func() {
 expect(func() {
 	panic("bar")
 }).To.Panic("bar")
+
+// FailNow
+expect("foo").To.Equal("bar").Else.FailNow()
 ```
 
 ## License
