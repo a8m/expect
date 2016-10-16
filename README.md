@@ -83,8 +83,19 @@ expect("foo").To.Equal("bar").Else.FailNow()
 ```go
 func TestFoo(t *testing.T) {
 	expect.Run(t, "SubFoo", func(expect expect.Expecter) {
-		expect("foo").To.Equal("bar")
+		expect("foo").To.Equal("foo")
+
+		// The expect package is shadowed, here, so we can't
+		// construct a function that requires an expect.Expecter.
+		// However, the expect.Expecter has a Run method that
+		// mirrors the functionality of the Run function, so
+		// we can still pass in functions constructed elsewhere.
+		expect.Run(t, "SubSubFoo", SomeOtherTest)
 	})
+}
+
+func SomeOtherTest(t *testing.T, expect expect.Expecter) {
+    expect("foo").To.Equal("bar")
 }
 ```
 
