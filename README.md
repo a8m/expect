@@ -76,6 +76,29 @@ expect(func() {
 expect("foo").To.Equal("bar").Else.FailNow()
 ```
 
+## With go 1.7, we provide a Run function
+
+`Run` is just sugar for calling `t.Run` followed by `expect.New(subT)`.
+
+```go
+func TestFoo(t *testing.T) {
+	expect.Run(t, "SubFoo", func(expect expect.Expecter) {
+		expect("foo").To.Equal("foo")
+
+		// The expect package is shadowed, here, so we can't
+		// construct a function that requires an expect.Expecter.
+		// However, the expect.Expecter has a Run method that
+		// mirrors the functionality of the Run function, so
+		// we can still pass in functions constructed elsewhere.
+		expect.Run(t, "SubSubFoo", SomeOtherTest)
+	})
+}
+
+func SomeOtherTest(t *testing.T, expect expect.Expecter) {
+    expect("foo").To.Equal("bar")
+}
+```
+
 ## License
 MIT
 

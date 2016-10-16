@@ -1,12 +1,5 @@
 package expect
 
-// T is a type that we can perform assertions with.
-type T interface {
-	Errorf(format string, args ...interface{})
-	Fatal(...interface{})
-	FailNow()
-}
-
 // Matcher is any type which can perform matches against an actual
 // value.  A non-nil error means a failed match, and its Error()
 // method should return a suffix that finishes the prefix,
@@ -55,8 +48,11 @@ type Not struct {
 	To *To
 }
 
-// Return new expect function with `To, To.Be, To.Have` assertions
-func New(t T) func(v interface{}) *Expect {
+// Expecter is a function to be used for making test assertions.
+type Expecter func(actual interface{}) *Expect
+
+// New returns a new Expecter with `To, To.Be, To.Have` assertions.
+func New(t T) Expecter {
 	return func(v interface{}) *Expect {
 		return &Expect{
 			To:  newTo(t, v, true),

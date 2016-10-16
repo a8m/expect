@@ -1,7 +1,7 @@
 package expect
 
 import (
-	. "fmt"
+	"fmt"
 	"reflect"
 )
 
@@ -26,7 +26,7 @@ func newBe(t T, e *Else, actual interface{}, assert bool) *Be {
 
 // Assert numeric value above the given value (> n)
 func (b *Be) Above(e float64) *Be {
-	msg := b.msg(Sprintf("above %v", e))
+	msg := b.msg(fmt.Sprintf("above %v", e))
 	if b.Num() > e != b.assert {
 		b.fail(2, msg)
 	}
@@ -35,7 +35,7 @@ func (b *Be) Above(e float64) *Be {
 
 // Assert numeric value below the given value (< n)
 func (b *Be) Below(e float64) *Be {
-	msg := b.msg(Sprintf("below %v", e))
+	msg := b.msg(fmt.Sprintf("below %v", e))
 	if b.Num() < e != b.assert {
 		b.fail(2, msg)
 	}
@@ -44,7 +44,7 @@ func (b *Be) Below(e float64) *Be {
 
 // Assert inclusive numeric range (<= to and >= from)
 func (b *Be) Within(from, to float64) *Be {
-	msg := b.msg(Sprintf("between range %v <= x <= %v", from, to))
+	msg := b.msg(fmt.Sprintf("between range %v <= x <= %v", from, to))
 	x := b.Num()
 	if x <= to && x >= from != b.assert {
 		b.fail(2, msg)
@@ -191,7 +191,7 @@ func (b *Be) Nil() *Be {
 
 // Assert given value is type of the given string
 func (b *Be) Type(s string) *Be {
-	msg := b.msg(Sprintf("type %v", s))
+	msg := b.msg(fmt.Sprintf("type %v", s))
 	if reflect.TypeOf(b.actual).Name() == s != b.assert {
 		b.fail(2, msg)
 	}
