@@ -5,7 +5,17 @@
 
 package expect_test
 
+import "testing"
+
 type mockT struct {
+	RunCalled chan bool
+	RunInput  struct {
+		Name chan string
+		Test chan func(t *testing.T)
+	}
+	RunOutput struct {
+		Succeeded chan bool
+	}
 	ErrorfCalled chan bool
 	ErrorfInput  struct {
 		Format chan string
@@ -20,6 +30,10 @@ type mockT struct {
 
 func newMockT() *mockT {
 	m := &mockT{}
+	m.RunCalled = make(chan bool, 100)
+	m.RunInput.Name = make(chan string, 100)
+	m.RunInput.Test = make(chan func(t *testing.T), 100)
+	m.RunOutput.Succeeded = make(chan bool, 100)
 	m.ErrorfCalled = make(chan bool, 100)
 	m.ErrorfInput.Format = make(chan string, 100)
 	m.ErrorfInput.Args = make(chan []interface{}, 100)
@@ -27,6 +41,12 @@ func newMockT() *mockT {
 	m.FatalInput.Arg0 = make(chan []interface{}, 100)
 	m.FailNowCalled = make(chan bool, 100)
 	return m
+}
+func (m *mockT) Run(name string, test func(t *testing.T)) (succeeded bool) {
+	m.RunCalled <- true
+	m.RunInput.Name <- name
+	m.RunInput.Test <- test
+	return <-m.RunOutput.Succeeded
 }
 func (m *mockT) Errorf(format string, args ...interface{}) {
 	m.ErrorfCalled <- true

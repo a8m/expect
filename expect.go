@@ -1,7 +1,10 @@
 package expect
 
+import "testing"
+
 // T is a type that we can perform assertions with.
 type T interface {
+	Run(name string, test func(t *testing.T)) (succeeded bool)
 	Errorf(format string, args ...interface{})
 	Fatal(...interface{})
 	FailNow()
@@ -55,12 +58,24 @@ type Not struct {
 	To *To
 }
 
-// Return new expect function with `To, To.Be, To.Have` assertions
-func New(t T) func(v interface{}) *Expect {
+// Expecter is a function to be used for making test assertions.
+type Expecter func(actual interface{}) *Expect
+
+// New returns a new Expecter with `To, To.Be, To.Have` assertions.
+func New(t T) Expecter {
 	return func(v interface{}) *Expect {
 		return &Expect{
 			To:  newTo(t, v, true),
 			Not: &Not{To: newTo(t, v, false)},
 		}
 	}
+}
+
+// Run acts like t.Run, but performs the `expect.New(t)` step for
+// you, passing in the resulting Expecter.
+func Run(t T, name string, expectation func(Expecter)) bool {
+	return t.Run(name, func(t *testing.T) {
+		expect := New(t)
+		expectation(expect)
+	})
 }
