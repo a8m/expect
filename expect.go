@@ -1,15 +1,5 @@
 package expect
 
-import "testing"
-
-// T is a type that we can perform assertions with.
-type T interface {
-	Run(name string, test func(t *testing.T)) (succeeded bool)
-	Errorf(format string, args ...interface{})
-	Fatal(...interface{})
-	FailNow()
-}
-
 // Matcher is any type which can perform matches against an actual
 // value.  A non-nil error means a failed match, and its Error()
 // method should return a suffix that finishes the prefix,
@@ -69,13 +59,4 @@ func New(t T) Expecter {
 			Not: &Not{To: newTo(t, v, false)},
 		}
 	}
-}
-
-// Run acts like t.Run, but performs the `expect.New(t)` step for
-// you, passing in the resulting Expecter.
-func Run(t T, name string, expectation func(Expecter)) bool {
-	return t.Run(name, func(t *testing.T) {
-		expect := New(t)
-		expectation(expect)
-	})
 }
