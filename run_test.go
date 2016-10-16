@@ -9,34 +9,43 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	mockT := newMockT()
-	mockT.RunOutput.Succeeded <- true
+	t.Run("Function", RunnerTests(expect.Run))
+	e := expect.New(t)
+	t.Run("Method", RunnerTests(e.Run))
+}
 
-	called := false
-	ran := expect.Run(mockT, "Foo", func(expect expect.Expecter) {
-		called = true
-	})
-	if !ran {
-		t.Error("expect.Run returned false when t.Run returned true")
-	}
-	select {
-	case name := <-mockT.RunInput.Name:
-		if name != "Foo" {
-			t.Errorf(`%#v (actual) != "Foo" (expected)`, name)
-		}
-		test := <-mockT.RunInput.Test
-		test(t)
-		if !called {
-			t.Errorf(`Calling test %#v did not call passed in expectation func`, test)
-		}
-	default:
-		t.Error("expect.Run never called t.Run")
-	}
+func RunnerTests(run func(expect.T, string, func(*testing.T, expect.Expecter)) bool) func(t *testing.T) {
+	return func(t *testing.T) {
+		mockT := newMockT()
+		mockT.RunOutput.Succeeded <- true
 
-	mockT.RunOutput.Succeeded <- false
-	ran = expect.Run(mockT, "Bar", func(expect expect.Expecter) {
-	})
-	if ran {
-		t.Error("expect.Run returned true when t.Run returned false")
+		called := false
+		ran := run(mockT, "Foo", func(*testing.T, expect.Expecter) {
+			called = true
+		})
+		if !ran {
+			t.Error("expect.Run returned false when t.Run returned true")
+		}
+
+		select {
+		case name := <-mockT.RunInput.Name:
+			if name != "Foo" {
+				t.Errorf(`%#v (actual) != "Foo" (expected)`, name)
+			}
+			test := <-mockT.RunInput.Test
+			test(t)
+			if !called {
+				t.Errorf(`Calling test %#v did not call passed in expectation func`, test)
+			}
+		default:
+			t.Error("expect.Run never called t.Run")
+		}
+
+		mockT.RunOutput.Succeeded <- false
+		ran = run(mockT, "Bar", func(*testing.T, expect.Expecter) {
+		})
+		if ran {
+			t.Error("expect.Run returned true when t.Run returned false")
+		}
 	}
 }
