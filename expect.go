@@ -46,6 +46,8 @@ type Matcher interface {
 	Match(actual interface{}) error
 }
 
+type Expectation func(v interface{}) *Expect
+
 type Expect struct {
 	To  *To
 	Not *Not
@@ -56,7 +58,7 @@ type Not struct {
 }
 
 // Return new expect function with `To, To.Be, To.Have` assertions
-func New(t T) func(v interface{}) *Expect {
+func New(t T) Expectation {
 	return func(v interface{}) *Expect {
 		return &Expect{
 			To:  newTo(t, v, true),
