@@ -22,6 +22,9 @@ func TestLen(t *testing.T) {
 	c <- true
 	expect(c).To.Have.Len(1)
 	expect(c).Not.To.Have.Len(0)
+
+	var i []int
+	expect(i).To.Have.Len(0)
 }
 
 func TestCap(t *testing.T) {
