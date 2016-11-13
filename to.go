@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/a8m/expect/matchers"
 )
 
 type To struct {
@@ -111,6 +113,19 @@ func (t *To) Pass(matcher Matcher) *To {
 		}
 	}
 	return t
+}
+
+// Assert that a value can be read from a channel
+func (t *To) Receive() *To {
+	var value interface{}
+	err := matchers.ReceiveTo(&value).Match(t.actual)
+	if t.assert && err != nil {
+		t.fail(2, t.msg(err.Error()))
+	} else if !t.assert && err == nil {
+		t.fail(2, t.msg("not to receive"))
+	}
+
+	return newTo(t.t, value, t.assert)
 }
 
 func (t *To) fail(callers int, msg string) {
