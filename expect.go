@@ -46,17 +46,24 @@ type Matcher interface {
 	Match(actual interface{}) error
 }
 
+// Expect is the result of calling an Expectation with a value to assert
+// against.
 type Expect struct {
 	To  *To
 	Not *Not
 }
 
+// Not stores a To that is initialized to be the negation of the main To.
 type Not struct {
 	To *To
 }
 
-// Return new expect function with `To, To.Be, To.Have` assertions
-func New(t T) func(v interface{}) *Expect {
+// Expectation returns an Expect that is used to make assertions.
+type Expectation func(v interface{}) *Expect
+
+// New returns a function that can be given a value and have `To, To.Be,
+// To.Have` assertions chained onto it.
+func New(t T) Expectation {
 	return func(v interface{}) *Expect {
 		return &Expect{
 			To:  newTo(t, v, true),
