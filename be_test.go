@@ -51,6 +51,66 @@ func TestOk(t *testing.T) {
 	expect([]int{}).To.Be.Ok()
 }
 
+func TestTrue(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+
+	expect(true).To.Be.True()
+	select {
+	case <-mockT.ErrorfCalled:
+		t.Errorf("Expected Errorf() on passing test not to be called")
+	case <-mockT.FatalCalled:
+		t.Errorf("Expected Fatal() on passing test not to be called")
+	case <-mockT.FailNowCalled:
+		t.Errorf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+
+	expect(false).To.Be.True()
+	select {
+	case <-mockT.ErrorfCalled:
+	default:
+		t.Errorf("Expected Errorf() on failing test to be called")
+	}
+
+	expect(42).To.Be.True()
+	select {
+	case <-mockT.FatalCalled:
+	default:
+		t.Errorf("Expected Fatal() on failing test to be called")
+	}
+}
+
+func TestFalse(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+
+	expect(false).To.Be.False()
+	select {
+	case <-mockT.ErrorfCalled:
+		t.Errorf("Expected Errorf() on passing test not to be called")
+	case <-mockT.FatalCalled:
+		t.Errorf("Expected Fatal() on passing test not to be called")
+	case <-mockT.FailNowCalled:
+		t.Errorf("Expected FailNow() on passing test not to be called")
+	default:
+	}
+
+	expect(true).To.Be.False()
+	select {
+	case <-mockT.ErrorfCalled:
+	default:
+		t.Errorf("Expected Errorf() on failing test to be called")
+	}
+
+	expect(42).To.Be.False()
+	select {
+	case <-mockT.FatalCalled:
+	default:
+		t.Errorf("Expected Fatal() on failing test to be called")
+	}
+}
+
 func TestString(t *testing.T) {
 	expect := expect.New(t)
 	expect("").To.Be.String()

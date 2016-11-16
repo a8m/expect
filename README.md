@@ -26,6 +26,10 @@ expect([2]int{}).Not.To.Be.Empty()
 expect(val).To.Be.Ok()
 expect(false).Not.To.Be.Ok()
 
+// True/False
+expect(true).To.Be.True()
+expect(false).To.Be.False()
+
 // Type Assertion
 expect("").To.Be.String()
 expect(0).To.Be.Int()
