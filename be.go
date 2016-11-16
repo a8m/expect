@@ -1,6 +1,7 @@
 package expect
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 )
@@ -220,4 +221,38 @@ func (b *Be) Num() float64 {
 		b.t.Fatal(invMsg("numeric"))
 		return 0
 	}
+}
+
+func (b *Be) True() bool {
+	v, err := b.bool()
+	if err != nil {
+		b.t.Fatal(invMsg("bool"))
+		return false
+	}
+	if !v {
+		b.fail(2, b.msg("true"))
+	}
+	return v
+}
+
+func (b *Be) False() bool {
+	v, err := b.bool()
+	if err != nil {
+		b.t.Fatal(invMsg("bool"))
+		return false
+	}
+	if v {
+		b.fail(2, b.msg("false"))
+	}
+	return v
+}
+
+func (b *Be) bool() (bool, error) {
+	rv := reflect.ValueOf(b.actual)
+	switch rv.Kind() {
+	case reflect.Bool:
+		return rv.Bool(), nil
+	default:
+	}
+	return false, errors.New("not a bool")
 }
