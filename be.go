@@ -223,28 +223,28 @@ func (b *Be) Num() float64 {
 	}
 }
 
-func (b *Be) True() bool {
+func (b *Be) True() *Be {
 	v, err := b.bool()
 	if err != nil {
 		b.t.Fatal(invMsg("bool"))
-		return false
+		return b
 	}
 	if !v {
 		b.fail(2, b.msg("true"))
 	}
-	return v
+	return b
 }
 
-func (b *Be) False() bool {
+func (b *Be) False() *Be {
 	v, err := b.bool()
 	if err != nil {
 		b.t.Fatal(invMsg("bool"))
-		return false
+		return b
 	}
 	if v {
 		b.fail(2, b.msg("false"))
 	}
-	return v
+	return b
 }
 
 func (b *Be) bool() (bool, error) {
