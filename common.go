@@ -24,6 +24,10 @@ func invMsg(v string) (s string) {
 }
 
 func length(v interface{}) (int, bool) {
+	if v == nil {
+		return 0, false
+	}
+
 	switch reflect.TypeOf(v).Kind() {
 	case reflect.Slice, reflect.Array, reflect.Map, reflect.String, reflect.Chan:
 		return reflect.ValueOf(v).Len(), true

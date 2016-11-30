@@ -26,13 +26,13 @@ func newHave(t T, e *Else, actual interface{}, assert bool) *Have {
 
 // Assert value to have length of the the given number
 func (h *Have) Len(i int) *Have {
-	msg := h.msg(Sprintf("length of %v", i))
 	if l, ok := length(h.actual); ok {
 		if l == i != h.assert {
+			msg := h.msg(Sprintf("length of %v (actual=%d) ", i, l))
 			h.fail(2, msg)
 		}
 	} else {
-		h.t.Fatal(invMsg("Array, Slice, Map or String"))
+		h.t.Fatal(invMsg("Array, Slice, Map, Chan or String"))
 	}
 	return h
 }
