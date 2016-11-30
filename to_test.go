@@ -189,3 +189,47 @@ func TestNotPassCustomMatcher(t *testing.T) {
 		t.Errorf("Expected Errorf() on failing test to be called")
 	}
 }
+
+func TestReceive(t *testing.T) {
+	mockT := newMockT()
+	expect := expect.New(mockT)
+	c := make(chan int, 10)
+
+	expect(c).To.Receive()
+	select {
+	case <-mockT.ErrorfInput.Args:
+	default:
+		t.Errorf("Expected Errorf() on passing test to be called")
+	}
+
+	expect(c).Not.To.Receive()
+	select {
+	case <-mockT.ErrorfInput.Args:
+		t.Errorf("Expected Errorf() on passing test to not be called")
+	default:
+	}
+
+	c <- 99
+	expect(c).To.Receive()
+	select {
+	case <-mockT.ErrorfInput.Args:
+		t.Errorf("Expected Errorf() on passing test to not be called")
+	default:
+	}
+
+	c <- 99
+	expect(c).Not.To.Receive()
+	select {
+	case <-mockT.ErrorfInput.Args:
+	default:
+		t.Errorf("Expected Errorf() on passing test to be called")
+	}
+
+	c <- 99
+	expect(c).To.Receive().And.Equal(99)
+	select {
+	case <-mockT.ErrorfInput.Args:
+		t.Errorf("Expected Errorf() on passing test to not be called")
+	default:
+	}
+}
